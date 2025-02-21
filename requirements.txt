@@ -1,0 +1,2 @@
+# No external libraries are required to run this script.
+# It is compatible with standard Python 3.6+ installations.
