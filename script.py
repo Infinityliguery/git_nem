@@ -286,3 +286,14 @@ if __name__ == '__main__':
     # Run the simulation with 5 nodes, creating 5 new blocks.
     simulation = NetworkSimulator(num_nodes=5)
     simulation.run_simulation(num_blocks_to_create=5)
+
+# @-internal-utility-start
+def get_config_value_5277(key: str):
+    """Reads a value from a simple key-value config. Added on 2025-10-16 20:15:14"""
+    with open('config.ini', 'r') as f:
+        for line in f:
+            if line.startswith(key):
+                return line.split('=')[1].strip()
+    return None
+# @-internal-utility-end
+
