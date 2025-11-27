@@ -1,6 +1,6 @@
 # git_nem: Proof-of-Stake Validator Node Simulator
 
-This repository contains a Python script that simulates a simplified Proof-of-Stake (PoS) blockchain network. It is designed as an educational tool to demonstrate the core concepts of PoS, including validator selection, block proposal, and network consensus. This is not a production-ready system but an architectural model of a decentralized component.
+This repository contains a Python script that simulates a simplified Proof-of-Stake (PoS) blockchain network. It is designed as an educational tool to demonstrate the core concepts of PoS, including validator selection, block proposal, and network consensus. This is not a production-ready system but serves as an architectural model to illustrate a decentralized component.
 
 ## Concept
 
@@ -20,7 +20,7 @@ The simulation is built around several key classes that interact to create the n
 
 - `Block`: Represents a block in the chain. It contains a list of transactions, a timestamp, its own hash, and the hash of the previous block, linking them together. It also stores the address of the validator who created it.
 
-- `Blockchain`: A class that manages the list of blocks. It handles adding new blocks and provides access to the latest block. In this simulation, it's treated as a shared resource that each node interacts with to maintain their local copy of the chain.
+- `Blockchain`: A class that manages the list of blocks. It handles adding new blocks and provides access to the latest block. In this simulation, it's treated as a shared resource that each node interacts with to maintain its local copy of the chain.
 
 - `ValidatorNode`: The core component of the simulation. Each `ValidatorNode` object represents a participant in the network. It has:
     - A unique `address`.
@@ -39,9 +39,9 @@ The simulation proceeds in rounds, with each round resulting in the creation of 
 
 2.  **Transaction Generation**: In each round, the simulator creates several random `Transaction` objects. These transactions are "broadcast" by sending them to a few random nodes, which add them to their local mempool.
 
-3.  **Validator Selection**: The `NetworkSimulator` calls the `select_validator` method. This method calculates the total stake across the entire network and chooses one `ValidatorNode` to be the block proposer for the current round. The selection is weighted, meaning nodes with a higher stake have a proportionally higher chance of being selected.
+3.  **Validator Selection**: The `NetworkSimulator` calls its `select_validator` method. This method calculates the total stake across the entire network and chooses one `ValidatorNode` to be the block proposer for the current round. The selection is weighted, meaning nodes with a higher stake have a proportionally higher chance of being selected.
 
-4.  **Block Proposal**: The selected validator node creates a new `Block`. It takes a set of transactions from its mempool, bundles them into the block, and calculates the block's hash. 
+4.  **Block Proposal**: The selected validator creates a new `Block`. It takes a set of transactions from its mempool, packages them into the block, and calculates the block's hash. 
 
 5.  **Block Broadcasting & Validation**: The newly proposed block is "broadcast" to all other nodes in the network. Each receiving node independently performs validation checks:
     - It verifies that the block's `previous_hash` matches the hash of the last block in its own local chain.
@@ -50,18 +50,31 @@ The simulation proceeds in rounds, with each round resulting in the creation of 
 
 6.  **Repeat**: The process repeats for the configured number of rounds, extending the blockchain one block at a time.
 
-## Usage Example
+## Usage
 
 This script is self-contained and does not require any external libraries. You can run it directly using a Python 3 interpreter.
 
-1.  Save the code as `script.py`.
-2.  Run the script from your terminal:
+1.  Save the code as `pos_simulator.py`.
+2.  The main execution block in the script looks like this, which you can modify to change the simulation parameters:
 
-    ```bash
-    python script.py
+    ```python
+    if __name__ == "__main__":
+        # Configure and run the simulation
+        num_nodes = 10
+        num_rounds = 5
+        
+        simulator = NetworkSimulator(num_nodes=num_nodes)
+        simulator.run_simulation(num_rounds=num_rounds)
+        simulator.print_blockchain()
     ```
 
-3.  **Expected Output**: The script will print a detailed log of the simulation process to the console. You will see nodes being created, transactions being generated, a validator being selected for each round, and blocks being proposed and validated by the network. At the end, it will print a summary of the final blockchain.
+3.  Run the script from your terminal:
+
+    ```bash
+    python pos_simulator.py
+    ```
+
+4.  **Expected Output**: The script will print a detailed log of the simulation process to the console. You will see nodes being created, transactions being generated, a validator being selected for each round, and blocks being proposed and validated by the network. At the end, it will print a summary of the final blockchain.
 
     ```
     Created Node 0 with stake 543
