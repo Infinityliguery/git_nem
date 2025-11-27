@@ -1,6 +1,6 @@
-# git_nem: Proof-of-Stake Validator Node Simulator
+# Proof-of-Stake (PoS) Validator Node Simulator
 
-This repository contains a Python script that simulates a simplified Proof-of-Stake (PoS) blockchain network. It is designed as an educational tool to demonstrate the core concepts of PoS, including validator selection, block proposal, and network consensus. This is not a production-ready system but serves as an architectural model to illustrate a decentralized component.
+This repository contains a Python script that simulates a simplified Proof-of-Stake (PoS) blockchain network. It is designed as an educational tool to demonstrate the core concepts of PoS, including validator selection, block proposal, and network consensus. It is not a production-ready system but serves as an architectural model to illustrate decentralized components.
 
 ## Concept
 
@@ -12,6 +12,11 @@ This script simulates:
 - The stake-weighted selection of a validator to propose the next block.
 - The creation, broadcasting, and validation of new blocks by all nodes in the network.
 
+## Requirements
+
+- Python 3.6+
+- No external libraries are needed.
+
 ## Code Architecture
 
 The simulation is built around several key classes that interact to create the network dynamics:
@@ -20,7 +25,7 @@ The simulation is built around several key classes that interact to create the n
 
 - `Block`: Represents a block in the chain. It contains a list of transactions, a timestamp, its own hash, and the hash of the previous block, linking them together. It also stores the address of the validator who created it.
 
-- `Blockchain`: A class that manages the list of blocks. It handles adding new blocks and provides access to the latest block. In this simulation, it's treated as a shared resource that each node interacts with to maintain its local copy of the chain.
+- `Blockchain`: A class that manages the list of blocks. It handles adding new blocks and provides access to the latest block. In this simulation, each node maintains its own copy of the blockchain.
 
 - `ValidatorNode`: The core component of the simulation. Each `ValidatorNode` object represents a participant in the network. It has:
     - A unique `address`.
@@ -37,13 +42,13 @@ The simulation proceeds in rounds, with each round resulting in the creation of 
 
 1.  **Initialization**: The `NetworkSimulator` is created. It initializes a global `Blockchain` with a genesis block and creates a specified number of `ValidatorNode` instances, each assigned a random stake.
 
-2.  **Transaction Generation**: In each round, the simulator creates several random `Transaction` objects. These transactions are "broadcast" by sending them to a few random nodes, which add them to their local mempool.
+2.  **Transaction Generation**: In each round, the simulator creates several random `Transaction` objects. These transactions are "broadcast" by sending them to a few random nodes, which add them to their local mempools.
 
 3.  **Validator Selection**: The `NetworkSimulator` calls its `select_validator` method. This method calculates the total stake across the entire network and chooses one `ValidatorNode` to be the block proposer for the current round. The selection is weighted, meaning nodes with a higher stake have a proportionally higher chance of being selected.
 
-4.  **Block Proposal**: The selected validator creates a new `Block`. It takes a set of transactions from its mempool, packages them into the block, and calculates the block's hash. 
+4.  **Block Proposal**: The selected validator creates a new `Block`. It takes a set of transactions from its mempool, packages them into the block, and calculates the block's hash.
 
-5.  **Block Broadcasting & Validation**: The newly proposed block is "broadcast" to all other nodes in the network. Each receiving node independently performs validation checks:
+5.  **Block Broadcasting & Validation**: The proposer "broadcasts" the newly created block to all other nodes in the network. Each receiving node independently performs validation checks:
     - It verifies that the block's `previous_hash` matches the hash of the last block in its own local chain.
     - It recalculates the block's hash to ensure the content has not been tampered with.
     - If all checks pass, the node adds the new block to its local copy of the blockchain.
@@ -52,10 +57,10 @@ The simulation proceeds in rounds, with each round resulting in the creation of 
 
 ## Usage
 
-This script is self-contained and does not require any external libraries. You can run it directly using a Python 3 interpreter.
+This script is self-contained and can be run directly using a Python 3 interpreter.
 
 1.  Save the code as `pos_simulator.py`.
-2.  The main execution block in the script looks like this, which you can modify to change the simulation parameters:
+2.  To run the simulation, you can modify the parameters in the main execution block at the bottom of the script:
 
     ```python
     if __name__ == "__main__":
@@ -74,7 +79,7 @@ This script is self-contained and does not require any external libraries. You c
     python pos_simulator.py
     ```
 
-4.  **Expected Output**: The script will print a detailed log of the simulation process to the console. You will see nodes being created, transactions being generated, a validator being selected for each round, and blocks being proposed and validated by the network. At the end, it will print a summary of the final blockchain.
+4.  **Expected Output**: The script will print a detailed log of the simulation process to the console. You will see nodes being created, transactions being generated, a validator being selected for each round, and blocks being proposed and validated. At the end, it will print a summary of the final blockchain.
 
     ```
     Created Node 0 with stake 543
@@ -84,11 +89,9 @@ This script is self-contained and does not require any external libraries. You c
     --- Starting Proof-of-Stake Simulation ---
 
     ================ ROUND 1 ================
-
     --- 1. Generating Transactions ---
     Node validator_node_3_... received transaction: validator_node_1_... -> validator_node_0_...: 5.67
     ...
-
     --- 2. Selecting Validator ---
     Chosen Validator: Node 0 (validator_node_0_...) with stake 543
 
